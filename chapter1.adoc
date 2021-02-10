@@ -8,8 +8,6 @@ ifndef::env-site[]
 :idNovarator: -
 endif::[]
 
-I will be doing these sessions on a weekly basis (That's what I'll try.)
-
 == Chapter [0x1]
 
 === Fundamentals
