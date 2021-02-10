@@ -1,0 +1,283 @@
+= C programming, Chapter 1. Know thy basics.
+Achilles Gaikwad <achilles@poizen.in>
+v1.0, 2020-03-31
+:page-layout: docs
+ifndef::env-site[]
+:toc: left
+:idprefix:
+:idNovarator: -
+endif::[]
+
+I will be doing these sessions on a weekly basis (That's what I'll try.)
+
+== Chapter [0x1]
+
+=== Fundamentals
+
+==== Writing a simple program
+
+- DO NOT Copy-pasta this stuff in a file.
+  Please try to type it out. Make errors, learn!
+
+[source,c]
+----
+#include <stdio.h>
+
+void main(){
+    printf("Hello, World!");
+}
+----
+
+- To compile the program
+
+[source,bash]
+----
+# gcc helloworld.c -o hello
+----
+
+- To run the program then type
+
+[source,bash]
+----
+# ./hello
+----
+
+- It is necessary to "include" the 'standard INPUT/OUTPUT library' because we're using the printf function which is present in the standard input/output library.
+
+[source,C]
+----
+# include <stdio.h>
+----
+
+[source,bash]
+----
+# grep -w printf /usr/include/stdio.h
+extern int printf (const char *__restrict __format, ...);
+----
+
+=== IDE
+
+- A lot of people like working with vim. However, I prefer vscode because of all the plugins it has. It makes for a nice text editor with terminal at the bottom of the screen so that you can compile and run other commands if necessary.
+
+- Setup vscode repository
+
+[source, bash]
+----
+# sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+
+# sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+
+# yum -y install code
+----
+
+- Run vscode from your programs menu. 
+
+- profit.
+
+
+=== Zooming in on helloworld.c
+
+Any simple c program has the following template
+
+[source,C]
+----
+directives
+
+int main(void){
+    statements;
+}
+----
+
+The curly braces show where the `main` _block_ begins and it ends.
+The commands which we want the `preprocessor` to take care of are called directives
+`#include` is therefore a directive.
+
+
+Let us look at more fancy Hello World.
+
+[source,C]
+----
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void){
+    /* This program prints "Hello, World!" */
+    printf("Hello, World!\n");
+    return EXIT_SUCCESS;
+}
+----
+
+So, what does the directive #include <stdio.h> suggest?
+It suggests that the stuff that's inside "stdio.h" should be _included_ into the program before it is compiled. Now-a-days the compilers are smart that even if you do not specify few directives, they include the stuff that's inside respective needed header file.
+
+
+How will you identify a directive?
+They always start with a `#` sign.
+
+
+Usually directives are just one line long, and they do not have any `;` to end them like we've statements that end with a semicolon or special markers at the end.
+
+
+`int main()` is a function. A function is a group of statements grouped together and given a name. That's all.
+
+
+A C program can contain multiple functions, but `main()` is compulsory. `main` is special. It gets called whenever the program runs. Right now, since  you're a noob, `main()` function is only function we'll deal with.
+
+
+The word `int` before `main` states that the function `main` returns a value which is of type `int`. 
+
+
+The word  `void` inside the parenthesis indicates that the function `main` doesn't take any arguments.
+
+
+Statements are commands that need to be executed when the program runs. In our simple C program there are just two statements, `printf` and `return`. `return` is a statement and `printf` is a function call. When we ask a function to do something for us we say we're calling that function or a _function call_.
+
+[source,C]
+----
+    printf("Hello, World!\n");
+----
+
+C requires that all the statements end with a semicolon. Except for compound statements, but you don't have to worry about them right now.
+
+
+One important thing about any source code that you'll read is, Documentation. C has a feature for documentation of the source code. We do that in form of comments.
+
+[source,C]
+----
+/* this is a comment 
+ *   which is covering multiple lines
+ */
+
+// This is also a comment, but its a one line comment.
+
+int foo() /* this is a function called foo */
+----
+
+Comments are ignored by the compiler. When the compiler encounters `/\*` it then ignores everything until it finds `*/`
+
+
+=== Variables and Assignment
+
+Very few programs are as simple as the hellowold.c program we wrote earlier. Most programs need to perform calculations and output results or store results somewhere. This is where the magical land of variables begins! Variables help store this data somewhere in the memory. These variables also need to have a specific type. This is where keywords such as `int`, `float`, `double`, etc. come in picture. A type is necessary because we need to tell what kind of data would be held in a variable.
+Example, `int a = 50;` stores the value 50 which is of type `int`-eger.
+
+[source,C]
+----
+int b = 90;
+----
+
+What I just did above is declare a varible and assign it the value 90. Declarations are imporant in C. To declare a variable one must specify the type of the variabel and then its name. There are restrictions on what you can name a variable, you should google this and have plenty of data to go ahead. Therefore I'll not be covering it. You can't store the value which has a decimal point in this variable because the type of this varible is `int`. To store a floating point value you'll need variable of type `float`. 
+
+[source,C]
+----
+float pi = 3.1415926;
+----
+
+If there are mutliple variables of same type, you can declare them in the same line.
+
+
+[source,C]
+----
+float i, j, k;
+int length, width;
+double pi;
+----
+
+There is another important concept that we covered is assignment! A variable can be given a value, its called assignment
+
+[source,C]
+----
+int height = 42;
+int length = 42;
+int width  = 42;
+----
+
+The number 42 here is called a constant. This reminds me of a quote
+
+"`You're the one constant in this sea of variables`" - Mr. Robot
+
+Anyway, moving ahead. Now our template for a simple program looks like this: 
+
+[source,C]
+----
+directives
+
+int main(void){
+    declarations;
+    statements;
+}
+----
+
+=== Reading input from user.
+
+What if you want to read some values from the user. Consider the following program that calculates area of a triangle.
+
+[source,C]
+----
+#include <stdio.h>
+
+/* Calculates the area of a triangle
+ */
+int main(void){
+    int height, base;
+    float area;
+
+    height = 12;
+    base  = 21;
+    area   = (base * height)/2 ;
+
+    printf("The area is %f\n", area);
+    return 0;
+}
+----
+
+Our program is mostly static, if I want to check the area of a different triangle? Do you need to edit the program, change the values, recompile the program and run a.out?
+
+Thankfully, you don't have to.
+
+[source,C]
+----
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void){
+    int height, base;
+    float area;
+	printf("I calculate area of a triangle\n");
+	printf("Enter the height: ");
+	scanf("%d",&height);
+	printf("Enter the width: ");
+	scanf("%d",&base);
+    area   = (base * height)/2 ;
+    printf("The area is %.2f\n", area);
+}
+----
+
+=== Exercises
+
+The secret is, do them all. Even if you know it, type it out. See what errors you encounter. Google those errors. Fix those errors. Read the manuals.
+
+- Create and run program that prints "foobar".
+
+- Google keywords in C. Make a note of them.
+
+- Write a program to print the following picture on screen: 
+
+----
+*************
+*           *
+*           *
+*           *
+*           *
+*************
+----
+
+- Write a program to calculate volume of a sphere which has radius of 5 units.
+
+- Modify the above program so that the radius can be entered by the user.
+
+- Write a program so that the following function gets evalulated :
+  x^3^ + 3x^2 - 3x + 42
+
+
+- Write a program where the user will enter the amount of money they've in INR and you print the $ amount. Convert it from INR to $.
